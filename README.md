@@ -19,6 +19,10 @@ If you use this code or methodology in your work, please consider citing the fol
 
 - Chen, B., Thompson, S. A., Matthews, B. H., Sharma, M., Li, R., Nowotarski, C. J., ... & Brooks, S. D. (2024). A New Technique to Retrieve Aerosol Vertical Profiles Using Micropulse Lidar and Ground-based Aerosol Measurements. EGUsphere, 2024, 1-33.
 
+## Acknowledgments
+
+This project uses portions of the [`mpl2nc`](https://github.com/peterkuma/mpl2nc) code under MIT license.
+
 ## Repository Structure
 
 - `LICENSE` – Project license
@@ -31,3 +35,4 @@ If you use this code or methodology in your work, please consider citing the fol
     - `plotmpl.py` – Plotting functions
     - `retrieval_aux.py` – Auxiliary functions
     - `tracer_avp_processing.py` – Main TRACER AVP pipeline
+
