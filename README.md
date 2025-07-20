@@ -11,7 +11,8 @@ This code provides routines for:
 - Plotting relevant diagnostic and retrieval figures
 
 This code was initially developed for the *Tracking Aerosol Convection Interactions Experiment* (TRACER), funded by the U.S. Department of Energy.  
-Included data in this repository is for example only.
+
+Included data in this repository is for example and testing only.
 
 ## Publications
 
