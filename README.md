@@ -1,6 +1,6 @@
 # MPL Aerosol Vertical Profile Retrieval (AVP)
 
-This repository contains Python code for retrieving aerosol vertical profiles using data from the Micropulse Lidar (MPL). Developed by Sarah D. Brooks group at Texas A&M University. 
+This repository contains Python code for retrieving aerosol vertical profiles using data from the Micropulse Lidar (MPL). Developed and Maintained by Sarah D. Brooks group at Texas A&M University. 
 
 This code provides routines for:
 
@@ -25,10 +25,10 @@ If you use this code or methodology in your work, please consider citing the fol
 - `LICENSE` – Project license
 - `README.md` – Project overview and documentation
 - `dev/`
-  - `find_layers.py` – Layer identification routines
-  - `inversempl.py` – Fernald inversion implementation
-  - `kappa_kohler_theory.py` – κ-Köhler theory utilities
-  - `plotmpl.py` – Plotting functions
-  - `pympl.py` – MPL data loading and preprocessing
-  - `retrieval_aux.py` – Auxiliary functions
-  - `tracer_avp_processing.py` – Main TRACER pipeline
+    - `pympl.py` – MPL data loading and preprocessing
+    - `inversempl.py` – Fernald inversion implementation
+    - `find_layers.py` – Layer identification routines
+    - `kappa_kohler_theory.py` – κ-Köhler theory utilities
+    - `plotmpl.py` – Plotting functions
+    - `retrieval_aux.py` – Auxiliary functions
+    - `tracer_avp_processing.py` – Main TRACER AVP pipeline
