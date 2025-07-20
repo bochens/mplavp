@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+
+# Logs and output
+*.log
+
+# Data files (ignored except example_data)
+*.csv
+*.nc
+*.h5
+*.pkl
+
+# Allow public example data
+!example_data/*.csv
+!example_data/*.nc
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+
+# IDE settings
+.vscode/
+.idea/
