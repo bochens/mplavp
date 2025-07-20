@@ -12,6 +12,147 @@ import scipy
 from netCDF4 import Dataset
 
 class PyMPL:
+    """
+        ------------------------------------------------------------------
+        PyMPL
+        ------------------------------------------------------------------
+        High-level container for processing one or more MPL scans plus all ancillary calibration data (after-pulse, overlap, dead-time).
+
+        Parameters
+        ----------
+        data_input : str | list[str] | dict
+            Path(s) to *.mpl files **or** pre-parsed data dictionary.
+        ap_input   : str | dict
+            After-pulse correction file or dict.
+        ov_input   : str | dict
+            Overlap correction file or dict.
+        dt_input   : str | dict
+            Dead-time correction file or dict.
+        blind_range : float, optional
+            Minimum usable range [km] (bins closer than this are masked). Check the instrument manual or with the manufacture.
+
+        Attributes created
+        ------------------
+        datetime : ndarray[datetime64]
+            UTC timestamps for each profile.
+        seconds_since_start : ndarray[int]
+            Seconds since the first profile.
+        range : ndarray[float]
+            Bin center ranges [km] after blind-range masking.
+        range_edges : ndarray[float]
+            Bin edges [km] for plotting.
+        bin_resolition : float
+            Range resolution [km].
+        laser_energy : ndarray[float]
+            Laser pulse energy [mJ].
+        temp_detector : ndarray[float]
+            Detector temperature [°C].
+        temp_telescope : ndarray[float]
+            Telescope temperature [°C].
+        temp_laser : ndarray[float]
+            Laser temperature [°C].
+        sync_pulses_seen_per_second : ndarray[int] or None
+            Only present for miniMPL systems.
+        number_profile : int
+            Number of profiles loaded.
+        raw_copol, raw_crosspol : ndarray
+            Raw photon counts (counts µs⁻¹) for co- and cross-polarized channels.
+        r2_corrected_copol, r2_corrected_crosspol : ndarray
+            Range-squared corrected signal.
+        nrb_copol, nrb_crosspol, nrb_unpol : ndarray
+            Normalized relative backscatter (NRB).
+        depol_ratio : ndarray
+            Volume depolarization ratio.
+        snr_copol, snr_crosspol : ndarray
+            Signal-to-noise ratio for each channel.
+        background_copol, background_crosspol : ndarray
+            Background photon counts [counts/µs].
+        interpolation_flag : bool
+            Set to True if interpolation has been applied.
+        interpolated_* : various
+            Interpolated versions of most above attributes (e.g., `interpolated_nrb_copol`).
+
+        Methods
+        -------
+        General
+        -------
+        __init__(...) :
+            Initialize and process raw + calibration input.
+        deepcopy() :
+            Return a deep copy of the PyMPL object.
+        interpolation_reset() :
+            Reset all interpolated attributes to None.
+
+        Reading Functions (Class Methods)
+        ---------------------------------
+        read_files(data_path, ap_path, ov_path, dt_path) :
+            Read MPL and calibration data into dicts.
+        read_mpl(file_path) :
+            Dispatch to single or multiple MPL file reading.
+        read_mpl_single_file(file_path) :
+            Read one binary .mpl file.
+        read_mpl_multiple_file(file_list) :
+            Read multiple MPL files.
+        read_afterpulse(file_path, number_bins) :
+            Read afterpulse binary file.
+        read_overlap(file_path) :
+            Read overlap binary file.
+        read_deadtime(file_path) :
+            Read deadtime correction file (.bin or .csv).
+
+        Computation and Filtering
+        -------------------------
+        calculate_snr(raw_data, background, background_std_dev) :
+            Compute signal-to-noise ratio.
+        calculate_dtcf(data) :
+            Compute deadtime correction factor.
+        calculate_r2_corrected(raw_data, background) :
+            Apply range-squared correction.
+        calculate_nrb(raw_data, background, ap_data, ap_background) :
+            Compute normalized relative backscatter.
+        calculate_depol_ratio() :
+            Compute volume depolarization ratio.
+        select_time(start_time, end_time) :
+            Return new PyMPL object filtered by time.
+        select_snr(data, snr_data, snr_limit) :
+            Mask data below SNR threshold.
+
+        Interpolation and Smoothing
+        ---------------------------
+        interpolate_data(time_resolution, start_time=None, end_time=None, ...) :
+            Interpolate all key variables onto a regular time grid.
+        interpolate_single_data(new_time_array, data, ...) :
+            Interpolate a single variable onto new time grid.
+        make_time_array(time_resolution, start_time, end_time) :
+            Create regularly spaced datetime array.
+        movingaverage(values, window, axis=0) :
+            Apply moving average smoothing.
+        _movingaverage(values, window) :
+            Helper for 1D smoothing.
+
+        I/O Functions
+        -------------
+        write_mpl(output_dir, filename) :
+            Write current `data_dict` to a new binary .mpl file.
+        output_netcdf(output_dir, filename) :
+            (Placeholder) Write output to NetCDF format.
+
+        File Selection Utilities (Static Methods)
+        -----------------------------------------
+        get_file_list_by_date_range(mpl_file_folder, date_range, suffix='*.mpl') :
+            Return MPL files matching given date range.
+        get_file_list_by_start_end_datetime(mpl_file_folder, start_datetime, end_datetime, suffix='*.mpl') :
+            Return MPL files spanning the given datetime interval.
+        get_date_range(start_datetime, end_datetime) :
+            Return list of daily `datetime64[D]` from start to end inclusive.
+
+        Notes
+        -----
+        * Range, afterpulse, overlap, and deadtime corrections are applied **eagerly** at object initialization.
+        * Temporal interpolation can be applied to generate data on a regular time grid.
+        * The class is intentionally heavy; use `deepcopy()` to clone a filtered subset without modifying the original.
+    """
+
     _C = 299792458 # m.s-1 speed of light
 
     _record_entry = ['unit_number','version','year','month','day','hours','minutes',
