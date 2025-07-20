@@ -1,4 +1,4 @@
-# MPL Aerosol Vertical Profile Retrieval (AVP)
+# MPL Aerosol Vertical Profile Retrieval (MPLAVP)
 
 This repository contains Python code for retrieving aerosol vertical profiles using data from the Micropulse Lidar (MPL). Developed and Maintained by Sarah D. Brooks group at Texas A&M University. 
 
