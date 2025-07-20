@@ -126,6 +126,8 @@ def Sasano_inversion_inwards(nrb, mpl_range, beta2, S1_function, S2 = molecular_
             total_backscatter[i-1] = numera / denomi  # Each loop is calculating for i-1
         else:
             pass
+
+    return np.transpose(np.array(total_backscatter)), beta2_output, selected_range
     
 
 

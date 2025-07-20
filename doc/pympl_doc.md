@@ -22,7 +22,7 @@ PyMPL(data_input, ap_input, ov_input, dt_input, blind_range=0.1)
 
 ---
 
-## Attribute Inventory
+## Attribute
 
 Below is the full set of attributes created at instantiation.  *Interpolated versions* (prefixed with `interpolated_`) are generated only after a call to `interpolate_data()`.
 
@@ -51,7 +51,7 @@ Below is the full set of attributes created at instantiation.  *Interpolated ver
 
 ---
 
-## Method Reference
+## Method
 
 Below each method is documented in **bullet list** style with data types and return values.
 
