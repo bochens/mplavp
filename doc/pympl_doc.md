@@ -12,16 +12,16 @@
 PyMPL(data_input, ap_input, ov_input, dt_input, blind_range=0.1)
 ```
 
-| parameter    | type                          | description             |
-| ------------ | ----------------------------- | ----------------------- |
-| `data_input` | `str`, `list[str]`, or `dict` | Path(s) to one or more  |
+| parameter    | type                          | description                                                  |
+| ------------ | ----------------------------- | ------------------------------------------------------------ |
+| `data_input` | `str`, `list[str]`, or `dict` | Path(s) to one or more *.mpl* files **or** a fully parsed data dictionary identical to `self.data_dict`. |
 
-| *.mpl* files **or** a fully parsed data dictionary identical to `self.data_dict`. |                 |                                                                                                        |
-| --------------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------ |
-| `ap_input`                                                                        | `str` or `dict` | After‑pulse correction file (binary) **or** pre‑parsed dict identical to `self.ap_dict`.               |
-| `ov_input`                                                                        | `str` or `dict` | Overlap correction file (binary) **or** pre‑parsed dict identical to `self.ov_dict`.                   |
-| `dt_input`                                                                        | `str` or `dict` | Dead‑time correction file (`.bin` or `.csv`) **or** pre‑parsed dict identical to `self.dt_dict`.       |
-| `blind_range`                                                                     | `float`         | Minimum usable range *in kilometres*; range bins closer than this are masked out (default **0.1 km**). |
+|               |                 |                                                              |
+| :------------ | --------------- | ------------------------------------------------------------ |
+| `ap_input`    | `str` or `dict` | After‑pulse correction file (binary) **or** pre‑parsed dict identical to `self.ap_dict`. |
+| `ov_input`    | `str` or `dict` | Overlap correction file (binary) **or** pre‑parsed dict identical to `self.ov_dict`. |
+| `dt_input`    | `str` or `dict` | Dead‑time correction file (`.bin` or `.csv`) **or** pre‑parsed dict identical to `self.dt_dict`. |
+| `blind_range` | `float`         | Minimum usable range *in kilometres*; range bins closer than this are masked out (default **0.1 km**). |
 
 ---
 
