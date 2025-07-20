@@ -7,8 +7,7 @@ This code provides routines for:
 - Processing raw MPL data
 - Performing Fernald inversion
 - Identifying cloud and layering structure
-- Ingesting radiosonde data
-- Ingesting ground-based aerosol measurements (e.g., size distribution, CCN, INP)
+- Retrieve aerosol, CCN, and INP vertical profile
 - Plotting relevant diagnostic and retrieval figures
 
 This code was initially developed for the *Tracking Aerosol Convection Interactions Experiment* (TRACER), funded by the U.S. Department of Energy.  
