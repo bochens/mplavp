@@ -22,14 +22,13 @@ If you use this code or methodology in your work, please consider citing the fol
 
 ## Repository Structure
 
-mplavp/
-├── LICENSE                    # Project license
-├── README.md                  # Project description and documentation
-└── dev/                       # Core retrieval and analysis code
-    ├── find_layers.py         # Layer identification routines
-    ├── inversempl.py          # Fernald inversion implementation
-    ├── kappa_kohler_theory.py # κ-Köhler theory utilities
-    ├── plotmpl.py             # Plotting functions
-    ├── pympl.py               # MPL data loading and preprocessing
-    ├── retrieval_aux.py       # Auxiliary functions for the retrieval workflow
-    └── tracer_avp_processing.py # Main pipeline for TRACER-specific processing
+- `LICENSE` – Project license
+- `README.md` – Project overview and documentation
+- `dev/`
+  - `find_layers.py` – Layer identification routines
+  - `inversempl.py` – Fernald inversion implementation
+  - `kappa_kohler_theory.py` – κ-Köhler theory utilities
+  - `plotmpl.py` – Plotting functions
+  - `pympl.py` – MPL data loading and preprocessing
+  - `retrieval_aux.py` – Auxiliary functions
+  - `tracer_avp_processing.py` – Main TRACER pipeline
