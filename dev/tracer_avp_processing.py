@@ -155,6 +155,96 @@ def process_arm_radiosonde_data(start_time, end_time, mpl_range,
 
     return sonde_beta2, rh_interpolator, fig, axs
 
+def process_arm_radiosonde_data_average(start_time, end_time, mpl_range, 
+                                        input_folder,
+                                        vertical_offset = 0,
+                                        wavelength = 532,
+                                        fig = None, axs = None, figsize = (9,4),
+                                        savefig = False, showplot = False, 
+                                        output_folder = '', fig_name = None):
+    '''
+    Processes all ARM radiosonde files within the given time range and returns the averaged interpolated profiles.
+
+    Returns:
+    - sonde_beta2: averaged molecular backscatter coefficient
+    - rh_mean_interp: averaged RH interpolator
+    - fig, axs: plot handles
+    '''
+
+    files = retrieval_aux.filter_doearm_filenames_by_datetime(input_folder, start_time, end_time, take_previous_and_after=False)
+
+    if len(files) == 0:
+        raise FileNotFoundError("No radiosonde files found in the given time range.")
+
+    pressure_profiles = []
+    temp_profiles     = []
+    rh_profiles       = []
+    beta2_profiles    = []
+    launch_times      = []
+
+    for f in files:
+        pressure_interp, temp_interp, rh_interp, datetimes = retrieval_aux.read_sondewnpn_data(f, vertical_offset=vertical_offset)
+        pressure_profiles.append(pressure_interp(mpl_range))
+        temp_profiles.append(temp_interp(mpl_range))
+        rh_profiles.append(rh_interp(mpl_range))
+        beta2_profiles.append(inversempl.rayleigh_bcksca_coeff(wavelength / 1000, mpl_range, pressure_interpolater=pressure_interp, temperature_interpolater=temp_interp))
+        launch_times.append(datetimes[0])
+
+    # Convert to arrays and average
+    pressure_profiles = np.array(pressure_profiles)
+    temp_profiles     = np.array(temp_profiles)
+    rh_profiles       = np.array(rh_profiles)
+    beta2_profiles    = np.array(beta2_profiles)
+
+    pressure_mean = np.mean(pressure_profiles, axis=0)
+    temp_mean     = np.mean(temp_profiles, axis=0)
+    rh_mean       = np.mean(rh_profiles, axis=0)
+    beta2_mean    = np.mean(beta2_profiles, axis=0)
+
+    # Create averaged interpolators
+    from scipy.interpolate import interp1d
+    pressure_mean_interp = interp1d(mpl_range, pressure_mean, bounds_error=False, fill_value="extrapolate")
+    temp_mean_interp     = interp1d(mpl_range, temp_mean, bounds_error=False, fill_value="extrapolate")
+    rh_mean_interp       = interp1d(mpl_range, rh_mean, bounds_error=False, fill_value="extrapolate")
+
+    # Plotting
+    if fig is None or axs is None:
+        fig, axs = plt.subplots(nrows=1, ncols=3, figsize=figsize)
+
+    axs[0].plot(rh_mean, mpl_range, c='k')
+    axs[0].set_xlabel('RH')
+    axs[0].set_ylabel('Height (Km)')
+    axs[0].set_xlim((0,100))
+    axs[0].set_ylim((0,20))
+
+    axs[1].plot(pressure_mean, mpl_range, c='k')
+    axs[1].set_xlabel('Pressure (Pa)')
+    axs[1].ticklabel_format(style='sci', axis='both', scilimits=(0,2))
+    axs[1].set_xlim((0,103000))
+    axs[1].set_ylim((0,20))
+
+    axs[2].plot(temp_mean, mpl_range, c='k')
+    axs[2].set_xlabel('Temperature (K)')
+    axs[2].ticklabel_format(style='sci', axis='both', scilimits=(0,2))
+    axs[2].set_xlim((180,350))
+    axs[2].set_ylim((0,20))
+
+    plt.tight_layout()
+    if savefig:
+        if fig_name is None:
+            fig_name = f'{start_time}_{end_time}_armradiosonde_profile_avg.png'
+        fig.savefig(os.path.join(output_folder, fig_name), dpi=300)
+
+    print('Processing ARM Radiosonde Data')
+    print(f'Found {len(files)} radiosonde files:')
+    for t in launch_times:
+        print(f'- Launch time: {t}')
+
+    if showplot:
+        plt.show()
+
+    return beta2_mean, rh_mean_interp, fig, axs
+
 
 
 def process_arm_tropoe_profile(start_time, end_time, mpl_range,
