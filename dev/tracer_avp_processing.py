@@ -31,36 +31,6 @@ from pympl import PyMPL
 warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 
-
-TRACER_data_folder = '/Users/bochen/TAMU/tamu_tracer/tracer_data'
-ARM_data_folder    = '/Volumes/DRIVE 6/TRACER_DOE_ARM_data'
-
-# Input folder for ARM Retrieval
-ARM_mpl_folder           = os.path.join(ARM_data_folder,'houmplpolfs/239067')
-ARM_houcsphotaod_folder  = os.path.join(ARM_data_folder,'houcsphotaod/243430')
-ARM_radiosounde_folder   = os.path.join(ARM_data_folder,'HOUSSONDEWNPN')
-ARM_sizedist_folder      = os.path.join(ARM_data_folder,'houmergedsmpsaps')
-ARM_CCN_folder           = os.path.join(ARM_data_folder,'houaosccn2colaspectraM1')
-ARM_tropoe_folder        = os.path.join(ARM_data_folder,'houtropoe')
-ARM_HTDMA_folder         = os.path.join(ARM_data_folder,'houaoshtdma')
-
-ARM_ACSM_kappa_file      = os.path.join(ARM_data_folder,'acsm_kappa.csv')
-
-
-# Input folder for TAMU retrieval
-tamu_mpl_folder          = os.path.join(TRACER_data_folder,'mpl_files_corrected')
-tamu_mpl_ap_file_path    = os.path.join(TRACER_data_folder,'MPL_config_files/MMPL5051_Afterpulse_202302161704_15m_energy_fixed.bin')
-tamu_mpl_ov_file_path    = os.path.join(TRACER_data_folder,'MPL_config_files/MMPL5051_Overlap_202302211516_15m_energy_fixed.bin')
-tamu_mpl_dt_file_path    = os.path.join(TRACER_data_folder,'MPL_config_files/deadtime_correction_5051_SPCM34394_20230928.csv')
-tamu_sizedist_folder     = os.path.join(TRACER_data_folder,'SMPS_POPS_MERGED/SMPS_POPS_MERGED_k=0.001_new')
-tamu_radiosounde_folder  = os.path.join(TRACER_data_folder,'TAMU_TRACER_radiosonde_data_final/TSPOTINT')
-tamu_CCN_folder          = os.path.join(TRACER_data_folder,'CCN')
-
-# INP concentration
-ARM_INP_concentration_folder    = os.path.join(TRACER_data_folder,'INP_Concentrations/inp_conc_amf1')
-TAMU_INP_concentration_folder   = os.path.join(TRACER_data_folder,'INP_Concentrations/inp_conc_roamv-')
-
-
 def process_mpl_data(start_time, end_time, input_folder, 
                      ap_file, ov_file, dt_file,
                      suffix = '*.mpl',
@@ -132,7 +102,7 @@ def process_mpl_data(start_time, end_time, input_folder,
 
 
 def process_arm_radiosonde_data(start_time, end_time, mpl_range, 
-                                input_folder = ARM_radiosounde_folder,
+                                input_folder,
                                 vertical_offset = 0,
                                 wavelength = 532,
                                 fig = None, axs = None, figsize = (9,4),
@@ -188,7 +158,7 @@ def process_arm_radiosonde_data(start_time, end_time, mpl_range,
 
 
 def process_arm_tropoe_profile(start_time, end_time, mpl_range,
-                               input_folder = ARM_tropoe_folder, wavelength=532,
+                               input_folder, wavelength=532,
                                fig=None, axs=None, figsize=(9, 4),
                                savefig=False, showplot=False, 
                                output_folder='', fig_name=None):
@@ -329,8 +299,7 @@ def process_arm_tropoe_profile(start_time, end_time, mpl_range,
 
 
 def process_tamu_radiosonde_data(start_time, end_time, mpl_range,
-                                 wavelength = 532,
-                                 input_folder = tamu_radiosounde_folder,
+                                 input_folder, wavelength = 532,
                                  fig = None, axs = None, figsize = (15,4),
                                  savefig = False, showplot = False, 
                                  output_folder = '', fig_name = None):
@@ -408,7 +377,7 @@ def process_tamu_radiosonde_data(start_time, end_time, mpl_range,
 
 
 def process_arm_mergedsizedist_data(start_time, end_time,
-                                    input_folder = ARM_sizedist_folder,
+                                    input_folder,
                                     figsize=(9,4), fig = None, axs = None,
                                     savefig = False, showplot = False, 
                                     output_folder = '', fig_name = None):
@@ -469,7 +438,7 @@ def process_arm_mergedsizedist_data(start_time, end_time,
 
 
 def process_tamu_mergedsizedist_data(start_time, end_time,
-                                     input_folder = tamu_sizedist_folder,
+                                     input_folder,
                                      figsize=(15,3), fig = None, axs = None,
                                      number_of_xticks = 5,
                                      savefig = False, showplot = False, 
@@ -580,7 +549,7 @@ def process_tamu_mergedsizedist_data(start_time, end_time,
 
 
 def process_arm_aod_data(start_time, end_time,
-                           input_folder = ARM_houcsphotaod_folder,
+                           input_folder,
                            figsize=(6,3), fig = None, axs = None,
                            savefig = False, showplot=False, 
                            output_folder = '', fig_name = None):
@@ -623,7 +592,7 @@ def process_arm_aod_data(start_time, end_time,
 
 
 def process_arm_CCN_data(start_time, end_time,
-                                input_folder = ARM_CCN_folder,
+                                input_folder,
                                 figsize=(10,4), fig = None, axs = None,
                                 savefig = False, showplot = False, 
                                 output_folder = '', fig_name = None):
@@ -713,7 +682,7 @@ def process_arm_CCN_data(start_time, end_time,
 
     
 def process_tamu_CCN_data(start_time, end_time,
-                          input_folder = tamu_CCN_folder,
+                          input_folder,
                           figsize=(4.5,4), fig=None, axs=None,
                           savefig=False, showplot=False, 
                           output_folder='', fig_name=None):
@@ -782,7 +751,7 @@ def process_tamu_CCN_data(start_time, end_time,
     
     
 def process_arm_INP_data(a_time,
-                         input_folder = ARM_INP_concentration_folder,
+                         input_folder,
                          figsize=(6,4), fig = None, axs = None,
                          savefig = False, showplot = False, 
                          output_folder = '', fig_name = None):
@@ -823,7 +792,7 @@ def process_arm_INP_data(a_time,
 
 
 def process_tamu_INP_data(a_time, is_coastal,
-                          input_folder = TAMU_INP_concentration_folder,
+                          input_folder,
                           figsize=(6,4), fig = None, axs = None,
                           savefig = False, showplot = False, 
                           output_folder = '', fig_name = None):
@@ -2499,120 +2468,3 @@ def output_data_with_lidar_details(start_time, end_time, station_name,
     ds.description = f'Lidar retrieved aerosol vertical profile, aerosol size distribution, CCN spectra, and INP spectra collected at {station_name}'
 
     ds.close()
-    
-
-
-# def process_arm_mpl_data(start_time, end_time, 
-#                          scale_num = 30, length_treshold = 25, value_treshold = 1.5, 
-#                          edge_treshold = 1.4, contain_cloud_treshold = 1.45, cloud_pixel_number_treshold = 2,
-#                          not_a_cloud_treshold = 1.4,
-#                          snr_treshold = 5,
-#                          blind_zone = 0.25,
-#                          input_folder = ARM_mpl_folder, 
-#                          fig = None, axs = None, figsize = (15,3.5), plot_range_max = 10,
-#                          savefig = False, showplot = False, 
-#                          output_folder = '', fig_name = None):
-#     '''
-#         Read the ARM MPL data from start_time to end_time, plot the curtain time series, and return the ARM MPL object.
-
-#     '''
-    
-#     # Read the ARM MPL file and perform interpolation
-#     ARM_file_paths = ARM_MPL.get_file_lists(input_folder, start_time, end_time)
-#     with warnings.catch_warnings():
-#         warnings.simplefilter("ignore", category=np.RankWarning)
-#         armmpl_data = ARM_MPL(ARM_file_paths, blind_zone=blind_zone)
-#     armmpl_data.interpolate_data(30, start_time = np.datetime64(start_time), end_time = np.datetime64(end_time), mov_avg_win=3)
-#     first_bin_normalizing = np.nanmean(armmpl_data.interpolated_nrb_copol[:, 0])
-#     normalized_copol_nrb = armmpl_data.interpolated_nrb_copol/first_bin_normalizing
-
-#     cloud_mask, all_cloud_bottoms, all_cloud_tops = find_layers.cwt_cloud_mask(normalized_copol_nrb, armmpl_data.range, \
-#             scale_num = scale_num, length_treshold = length_treshold, value_treshold = value_treshold, edge_treshold = edge_treshold, \
-#             contain_cloud_treshold = contain_cloud_treshold, cloud_pixel_number_treshold = cloud_pixel_number_treshold, not_a_cloud_treshold = not_a_cloud_treshold)
-    
-#     cloud_free_column = np.all(cloud_mask != 1, axis=1)
-
-#     high_snr_depol = armmpl_data.select_snr(armmpl_data.interpolated_depol_ratio,armmpl_data.interpolated_snr_copol, snr_treshold)
-
-#     # Plotting
-#     if fig is None or axs is None:
-#         fig, axs = plt.subplots(nrows=1, ncols=3, figsize=figsize)
-#     plotmpl.plot_mpl_2d_timeseries(armmpl_data.interpolated_datetime, armmpl_data.range, normalized_copol_nrb, fig=fig, ax=axs[0], range_max = plot_range_max, vmin=0, vmax=2, x_tick_number = 4)
-#     plotmpl.plot_mpl_2d_timeseries(armmpl_data.interpolated_datetime, armmpl_data.range, high_snr_depol, fig=fig, ax=axs[1], range_max = plot_range_max, vmin=0.01, vmax=1, color_map = plotmpl.lidar_jet, colorbar_norm = 'log', x_tick_number = 4)
-#     plotmpl.plot_mpl_2d_timeseries(armmpl_data.interpolated_datetime, armmpl_data.range, cloud_mask, fig=fig, ax=axs[2], range_max = plot_range_max, x_tick_number = 4, colorbar_bool = True)
-
-#     axs[0].set_xlabel('Time (UTC)', labelpad=-10)
-#     axs[1].set_xlabel('Time (UTC)', labelpad=-10)
-#     axs[2].set_xlabel('Time (UTC)', labelpad=-10)
-
-#     for ax, label in zip(axs, ['(a)', '(b)', '(c)']):
-#         ax.text(0.02, 0.97, label, transform=ax.transAxes, fontsize=12, fontweight='bold', va='top', color='w')
-#     plt.tight_layout()
-
-#     if savefig:
-#         if fig_name is None:
-#             fig_name = f'{start_time}_{end_time}_armmpl_curtain.png'
-#         fig.savefig(os.path.join(output_folder, fig_name), dpi=300)
-
-#     # Print information:
-#     print('Processing ARM MPL Data')
-#     print(f'ARM MPL files: {ARM_file_paths}')
-#     plt.show()
-
-#     return armmpl_data, cloud_mask, cloud_free_column, high_snr_depol, fig, axs
-
-
-# def process_tamu_mpl_data(start_time, end_time, 
-#                           scale_num = 30, length_treshold = 25, value_treshold = 1.5, 
-#                           edge_treshold = 1.4, contain_cloud_treshold = 1.45, cloud_pixel_number_treshold = 2,
-#                           not_a_cloud_treshold = 1.4,
-#                           snr_treshold = 5,
-#                           blind_zone = 0.1,
-#                           input_folder = tamu_mpl_folder, 
-#                           fig = None, axs = None, figsize = (15,3.5), plot_range_max = 10,
-#                           savefig = False, showplot = False, 
-#                           output_folder = '', fig_name = None):
-    
-#     TAMU_file_paths  = PyMPL.get_file_list_by_start_end_datetime(input_folder, start_time, end_time)
-#     with warnings.catch_warnings():
-#         warnings.simplefilter("ignore", category=np.RankWarning)
-#         mpl_object = PyMPL(TAMU_file_paths, tamu_mpl_ap_file_path, tamu_mpl_ov_file_path, tamu_mpl_dt_file_path, blind_range = blind_zone)
-
-#     mpl_object.interpolate_data(60, start_time = np.datetime64(start_time), end_time = np.datetime64(end_time))
-#     first_bin_normalizing = np.nanmean(mpl_object.interpolated_nrb_copol[:, 0])
-#     normalized_copol_nrb = mpl_object.interpolated_nrb_copol/first_bin_normalizing
-
-#     cloud_mask, all_cloud_bottoms, all_cloud_tops = find_layers.cwt_cloud_mask(normalized_copol_nrb, mpl_object.range, \
-#             scale_num = scale_num, length_treshold = length_treshold, value_treshold = value_treshold, edge_treshold = edge_treshold, \
-#             contain_cloud_treshold = contain_cloud_treshold, cloud_pixel_number_treshold = cloud_pixel_number_treshold, not_a_cloud_treshold = not_a_cloud_treshold)
-    
-#     cloud_free_column = np.all(cloud_mask != 1, axis=1)
-
-#     high_snr_depol = mpl_object.select_snr(mpl_object.interpolated_depol_ratio, mpl_object.interpolated_snr_copol, snr_treshold)
-
-#     # Plotting
-#     if fig is None or axs is None:
-#         fig, axs = plt.subplots(nrows=1, ncols=3, figsize=figsize)
-#     plotmpl.plot_mpl_2d_timeseries(mpl_object.interpolated_datetime, mpl_object.range, normalized_copol_nrb, fig=fig, ax=axs[0], range_max = plot_range_max, vmin=0, vmax=2, x_tick_number = 4)
-#     plotmpl.plot_mpl_2d_timeseries(mpl_object.interpolated_datetime, mpl_object.range, high_snr_depol, fig=fig, ax=axs[1], range_max = plot_range_max, vmin=0.01, vmax=1, color_map = plotmpl.lidar_jet, colorbar_norm = 'log', x_tick_number = 4)
-#     plotmpl.plot_mpl_2d_timeseries(mpl_object.interpolated_datetime, mpl_object.range, cloud_mask, fig=fig, ax=axs[2], range_max = plot_range_max, x_tick_number = 4, colorbar_bool = True)
-
-#     axs[0].set_xlabel('Time (UTC)', labelpad=-10)
-#     axs[1].set_xlabel('Time (UTC)', labelpad=-10)
-#     axs[2].set_xlabel('Time (UTC)', labelpad=-10)
-
-#     for ax, label in zip(axs, ['(a)', '(b)', '(c)']):
-#         ax.text(0.02, 0.97, label, transform=ax.transAxes, fontsize=12, fontweight='bold', va='top', color='w')
-#     plt.tight_layout()
-
-#     if savefig:
-#         if fig_name is None:
-#             fig_name = f'{start_time}_{end_time}_tamumpl_curtain.png'
-#         fig.savefig(os.path.join(output_folder, fig_name), dpi=300)
-
-#     # Print information:
-#     print('Processing TAMU MPL Data')
-#     print(f'ARM MPL files: {TAMU_file_paths}')
-#     plt.show()
-
-#     return mpl_object, cloud_mask, cloud_free_column, high_snr_depol, fig, axs

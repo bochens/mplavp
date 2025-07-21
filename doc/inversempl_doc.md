@@ -32,8 +32,8 @@ Rayleigh backscatter coefficient at a given altitude using the supplied atmosphe
 **Parameters**
 - `LAM` (`float`): Wavelength **µm**.
 - `height` (`float | np.ndarray`): Altitude **km**.
-- `pressure_interpolater` (`Callable`): Returns pressure **Pa** for height.
-- `temperature_interpolater` (`Callable`): Returns temperature **K** for height.
+- `pressure_interpolater` (`Callable`): Interpolator that returns pressure **Pa** for height. Default to 
+- `temperature_interpolater` (`Callable`): Interpolator that returns temperature **K** for height.
 
 **Returns**
 - `np.ndarray[float]`: Molecular backscatter **km⁻¹ sr⁻¹**.
