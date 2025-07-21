@@ -45,7 +45,6 @@ def process_mpl_data(start_time, end_time, input_folder,
                      output_folder = '', fig_name = None):
     
     file_paths  = PyMPL.get_file_list_by_start_end_datetime(input_folder, start_time, end_time)
-    print(file_paths)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=np.RankWarning)
         mpl_object = PyMPL(file_paths, ap_file, ov_file, dt_file, blind_range = blind_zone)
@@ -80,6 +79,10 @@ def process_mpl_data(start_time, end_time, input_folder,
     axs[0].set_xlabel('Time (UTC)', labelpad=-5)
     axs[1].set_xlabel('Time (UTC)', labelpad=-5)
     axs[2].set_xlabel('Time (UTC)', labelpad=-5)
+
+    axs[0].set_title('NRB')
+    axs[1].set_title('Depol')
+    axs[2].set_title('Cloud Mask')
 
     axs[0].set_ylabel('Altitude AGL (km)')
     axs[1].set_ylabel('Altitude AGL (km)')
