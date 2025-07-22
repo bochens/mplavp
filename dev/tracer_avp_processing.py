@@ -1526,7 +1526,6 @@ def calculate_humidification_factor(start_time, end_time,
     axs.fill_between(rhs, h_factors_high, h_factors_low, color= 'r', alpha=0.3)
     axs.set_xbound(0, rh_lim)
     axs.set_ylim(1, hf_high_interp(rh_lim))
-    axs.set_ylim(1, 12)
     #axs.legend()
     axs.set_xlabel('Relative humidity')
     axs.set_ylabel('Lidar hygroscopic \ngrowth correction factor')
