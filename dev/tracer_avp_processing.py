@@ -1196,6 +1196,8 @@ def read_ACSM_kappa(start_time, end_time, acsm_kappa_file):
     weights = overlap[mask]
     gm = np.exp(np.sum(weights * np.log(kappas[mask])) / np.sum(weights))
 
+    print(f'The geometric mean kappa is {gm}')
+
     return gm
 
 
