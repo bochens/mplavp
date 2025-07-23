@@ -1628,7 +1628,7 @@ def mpl_profile_prep(start_time, end_time,
     axs[1].plot(cloudfree_depol_mean, mpl_range, label = 'depol ratio', lw=1, color = depol_color)
     axs[1].set_ylim((0, ylim))
     axs[1].set_xscale('log')
-    axs[1].set_ylabel('Altitude AGL (km)')
+    #axs[1].set_ylabel('Altitude AGL (km)')
     axs[1].set_xlabel('Linear Depolarization Ratio')
 
     if savefig:
@@ -1706,6 +1706,7 @@ def retrieve_backscatter(start_time, end_time,
     ASHF_high_profile = hf_high_interp(smotothed_rh_profile/100)
     ASHF_low_profile  = hf_low_interp(smotothed_rh_profile/100)
 
+
     from scipy.ndimage import gaussian_filter1d
     from scipy.signal import windows, convolve
 
@@ -1730,13 +1731,10 @@ def retrieve_backscatter(start_time, end_time,
         kern = kern / kern.sum()       # normalize area to 1
         return convolve(profile, kern, mode='same')
 
+
     # --- in your code ---
     if ashf_smooth_factor:
         w = max(1, int(ashf_smooth_factor))
-        # Option A: Flat-top window
-        # ASHF_avg_profile  = flat_top_filter(ASHF_avg_profile,  window_len=w)
-        # ASHF_high_profile = flat_top_filter(ASHF_high_profile, window_len=w)
-        # ASHF_low_profile  = flat_top_filter(ASHF_low_profile,  window_len=w)
 
         # Option B: Gaussian
         ASHF_avg_profile  = fatten_peaks_gaussian(ASHF_avg_profile,  sigma=w/2)
@@ -1750,6 +1748,10 @@ def retrieve_backscatter(start_time, end_time,
     ASHF_profiles = np.array([ASHF_avg_profile, ASHF_high_profile, ASHF_low_profile])
 
     dry_aerosol_backscatter_coeffs = []
+
+    #print(aerosol_backscatter_coeffs)
+
+    
     for an_aerosol_backscatter_coeff in aerosol_backscatter_coeffs:
         # Loop through each ASHF profile
         for ashf_profile in ASHF_profiles:
@@ -1758,6 +1760,8 @@ def retrieve_backscatter(start_time, end_time,
             dry_aerosol_backscatter_coeffs.append(a_dry_aerosol_backscatter_coeff)
     print(f'number of dry_aerosol_backscatter_coeffs {len(dry_aerosol_backscatter_coeffs)}')        
     dry_aerosol_backscatter_coeffs = np.array(dry_aerosol_backscatter_coeffs)
+
+    
 
     # # extend to surface
     # dry_polyfit_coefficients_list = []
@@ -1802,6 +1806,7 @@ def retrieve_backscatter(start_time, end_time,
         bounds_upper = [np.inf, np.inf, np.inf]
         
         # Fit the data using curve_fit with bounds on the coefficients
+
         popt, _ = curve_fit(
             quadratic, x_data, y_data, 
             bounds=(bounds_lower, bounds_upper)
@@ -1836,8 +1841,6 @@ def retrieve_backscatter(start_time, end_time,
 
     color_cycle = cycle(plt.cm.tab20(np.linspace(0, 1, 8)))  # Uses a colormap to generate many colors
     ls_cycle    = cycle(['-', '--', ':', '-.'])  # Basic line styles, cycling repeats these
-
-
 
     
     
@@ -1885,8 +1888,8 @@ def retrieve_backscatter(start_time, end_time,
     axs[0].set_xlabel('Backscatter Coefficient (km$^{-1}$)')
     axs[1].set_xlabel('Backscatter Coefficient (km$^{-1}$)')
     axs[0].legend()
-    axs[0].set_ylabel('Altitude AGL (km)')
-    axs[1].set_ylabel('Altitude AGL (km)')
+    #axs[0].set_ylabel('Altitude AGL (km)')
+    #axs[1].set_ylabel('Altitude AGL (km)')
 
     if savefig:
         if fig_name is None:
