@@ -1,10 +1,7 @@
-# Numerical computing
 import numpy as np
-
-# Plotting
 import matplotlib.pyplot as plt
-from matplotlib import cm
 import matplotlib.colors as colors
+from matplotlib import cm
 from matplotlib.colors import ListedColormap
 
 def _make_lidar_colormap(cmap_str, under_color=np.array([0, 0, 0, 1]), over_color=np.array([1, 1, 1, 1])):

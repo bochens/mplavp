@@ -1758,7 +1758,7 @@ def retrieve_backscatter(start_time, end_time,
             # Adjust the backscatter profile by the ASHF profile
             a_dry_aerosol_backscatter_coeff = an_aerosol_backscatter_coeff / ashf_profile
             dry_aerosol_backscatter_coeffs.append(a_dry_aerosol_backscatter_coeff)
-    print(f'number of dry_aerosol_backscatter_coeffs {len(dry_aerosol_backscatter_coeffs)}')        
+    print(f'number of dry_aerosol_backscatter_coeffs columns {len(dry_aerosol_backscatter_coeffs)}')        
     dry_aerosol_backscatter_coeffs = np.array(dry_aerosol_backscatter_coeffs)
 
     
@@ -1953,18 +1953,21 @@ def aerosol_profiles(start_time, end_time,
 
     CCN_maes = [] # store data for looping through supersaturation arrays
     blind_CCN_maes = []
-    for i, an_ss in enumerate(ss_array):
-        CCN_profiles = []
-        blind_CCN_profiles = []
-        for j, a_dry_profile in enumerate(dry_aerosol_backscatter_coeffs):
-            for a_N_CCN in [average_N_CCN[i]-uncertainty_N_CCN[i], average_N_CCN[i], average_N_CCN[i]+uncertainty_N_CCN[i]]:
-                CCN_profiles.append(a_N_CCN * a_dry_profile/blind_dry_bcksca_coeff_profiles[j][0])
-                blind_CCN_profiles.append(a_N_CCN * blind_dry_bcksca_coeff_profiles[j]/blind_dry_bcksca_coeff_profiles[j][0])
-        a_CCN_mae = uncertainty_analysis(CCN_profiles)
-        a_blind_CCN_mae = uncertainty_analysis(blind_CCN_profiles)
 
-        CCN_maes.append(a_CCN_mae)
-        blind_CCN_maes.append(a_blind_CCN_mae)
+    if ss_array:
+        for i, an_ss in enumerate(ss_array):
+            CCN_profiles = []
+            blind_CCN_profiles = []
+            for j, a_dry_profile in enumerate(dry_aerosol_backscatter_coeffs):
+                for a_N_CCN in [average_N_CCN[i]-uncertainty_N_CCN[i], average_N_CCN[i], average_N_CCN[i]+uncertainty_N_CCN[i]]:
+                    CCN_profiles.append(a_N_CCN * a_dry_profile/blind_dry_bcksca_coeff_profiles[j][0])
+                    blind_CCN_profiles.append(a_N_CCN * blind_dry_bcksca_coeff_profiles[j]/blind_dry_bcksca_coeff_profiles[j][0])
+            a_CCN_mae = uncertainty_analysis(CCN_profiles)
+            a_blind_CCN_mae = uncertainty_analysis(blind_CCN_profiles)
+
+            CCN_maes.append(a_CCN_mae)
+            blind_CCN_maes.append(a_blind_CCN_mae)
+            ccn_colors = plt.cm.tab10(np.linspace(0, 1, len(ss_array)))
     
     INP_maes = []
     blind_INP_maes = []
@@ -1996,32 +1999,36 @@ def aerosol_profiles(start_time, end_time,
     # axs[0].plot(blind_aerosol_profile_mae[0]-blind_aerosol_profile_mae[1], blind_inv_range, color = 'k', ls = ':')
     # axs[0].plot(blind_aerosol_profile_mae[0]+blind_aerosol_profile_mae[2], blind_inv_range, color = 'k', ls = ':')
     
-    ccn_colors = plt.cm.tab10(np.linspace(0, 1, len(ss_array)))
+    
     #ccn_colors = ['tab:blue', 'tab:orange','tab:green'] # for paper
     if CCN_maes:
         for i in range(len(CCN_maes)):
             j = i
         #for j in range(3):
             #i = [0,2,5][j]
-            #axs[0].plot(CCN_maes[i][0], inv_range, color=ccn_colors[i], label = f'SS={ss_array[i]:.2f}%') # not using standard error
-            axs[0].plot(np.concatenate([blind_CCN_maes[i][0], CCN_maes[i][0]]), np.concatenate([blind_inv_range, inv_range]), color=ccn_colors[j], label = f'$s_{{s}}={ss_array[i]:.2f}%$')
-            #axs[0].fill_betweenx(inv_range, CCN_maes[i][0]-CCN_maes[i][1], CCN_maes[i][0]+CCN_maes[i][2], color=ccn_colors[i], alpha=0.3)
-            axs[0].fill_betweenx(np.concatenate([blind_inv_range, inv_range]), \
-                                np.concatenate([blind_CCN_maes[i][0]-blind_CCN_maes[i][1], CCN_maes[i][0]-CCN_maes[i][1]]), \
-                                np.concatenate([blind_CCN_maes[i][0]+blind_CCN_maes[i][2], CCN_maes[i][0]+CCN_maes[i][2]]), color=ccn_colors[j], alpha=0.3)
-            axs[0].plot(blind_CCN_maes[i][0], blind_inv_range, color=ccn_colors[j], ls = ':')
+            if axs[0]:
+                #axs[0].plot(CCN_maes[i][0], inv_range, color=ccn_colors[i], label = f'SS={ss_array[i]:.2f}%') # not using standard error
+                axs[0].plot(np.concatenate([blind_CCN_maes[i][0], CCN_maes[i][0]]), np.concatenate([blind_inv_range, inv_range]), color=ccn_colors[j], label = f'$s_{{s}}={ss_array[i]:.2f}%$')
+                #axs[0].fill_betweenx(inv_range, CCN_maes[i][0]-CCN_maes[i][1], CCN_maes[i][0]+CCN_maes[i][2], color=ccn_colors[i], alpha=0.3)
+                axs[0].fill_betweenx(np.concatenate([blind_inv_range, inv_range]), \
+                                    np.concatenate([blind_CCN_maes[i][0]-blind_CCN_maes[i][1], CCN_maes[i][0]-CCN_maes[i][1]]), \
+                                    np.concatenate([blind_CCN_maes[i][0]+blind_CCN_maes[i][2], CCN_maes[i][0]+CCN_maes[i][2]]), color=ccn_colors[j], alpha=0.3)
+                axs[0].plot(blind_CCN_maes[i][0], blind_inv_range, color=ccn_colors[j], ls = ':')
 
-            axs[1].plot(replace_zeros_with_nan(CCN_maes[i][0]), inv_range, color=ccn_colors[j], label = f'SS={ss_array[i]:.2f}%')
-            axs[1].fill_betweenx(inv_range, replace_zeros_with_nan(CCN_maes[i][0]-CCN_maes[i][1]), replace_zeros_with_nan(CCN_maes[i][0]+CCN_maes[i][2]), color=ccn_colors[j], alpha=0.3)
+            if axs[1]:
+                axs[1].plot(replace_zeros_with_nan(CCN_maes[i][0]), inv_range, color=ccn_colors[j], label = f'SS={ss_array[i]:.2f}%')
+                axs[1].fill_betweenx(inv_range, replace_zeros_with_nan(CCN_maes[i][0]-CCN_maes[i][1]), replace_zeros_with_nan(CCN_maes[i][0]+CCN_maes[i][2]), color=ccn_colors[j], alpha=0.3)
 
-    axs[0].plot(np.concatenate([blind_aerosol_profile_mae[0], aerosol_profile_mae[0]]), np.concatenate([blind_inv_range, inv_range]), color = 'k', label = 'Aerosol')
-    axs[0].fill_betweenx(np.concatenate([blind_inv_range, inv_range]), \
-                         np.concatenate([blind_aerosol_profile_mae[0]-blind_aerosol_profile_mae[1], aerosol_profile_mae[0]-aerosol_profile_mae[1]]), \
-                         np.concatenate([blind_aerosol_profile_mae[0]+blind_aerosol_profile_mae[2], aerosol_profile_mae[0]+aerosol_profile_mae[2]]), \
-                         color = 'k', alpha=0.3)
-    axs[1].plot(replace_zeros_with_nan(aerosol_profile_mae[0]), inv_range, color = 'k', label = 'Aerosol', zorder = 2)
-    axs[1].fill_betweenx(inv_range, replace_zeros_with_nan(aerosol_profile_mae[0]-aerosol_profile_mae[1]), replace_zeros_with_nan(aerosol_profile_mae[0]+aerosol_profile_mae[2]), color = 'k', alpha=0.3, zorder = 1)
-    
+    if axs[0]:
+        axs[0].plot(np.concatenate([blind_aerosol_profile_mae[0], aerosol_profile_mae[0]]), np.concatenate([blind_inv_range, inv_range]), color = 'k', label = 'Aerosol')
+        axs[0].fill_betweenx(np.concatenate([blind_inv_range, inv_range]), \
+                            np.concatenate([blind_aerosol_profile_mae[0]-blind_aerosol_profile_mae[1], aerosol_profile_mae[0]-aerosol_profile_mae[1]]), \
+                            np.concatenate([blind_aerosol_profile_mae[0]+blind_aerosol_profile_mae[2], aerosol_profile_mae[0]+aerosol_profile_mae[2]]), \
+                            color = 'k', alpha=0.3)
+    if axs[1]:
+        axs[1].plot(replace_zeros_with_nan(aerosol_profile_mae[0]), inv_range, color = 'k', label = 'Aerosol', zorder = 2)
+        axs[1].fill_betweenx(inv_range, replace_zeros_with_nan(aerosol_profile_mae[0]-aerosol_profile_mae[1]), replace_zeros_with_nan(aerosol_profile_mae[0]+aerosol_profile_mae[2]), color = 'k', alpha=0.3, zorder = 1)
+        
     if inp_temp_list is not None:
         if INP_maes:
             for i in reversed(range(len(INP_maes))):
@@ -2052,34 +2059,48 @@ def aerosol_profiles(start_time, end_time,
                                     replace_zeros_with_nan(INP_maes[i][0]+INP_maes[i][2]), 
                                     color=INP_plot_colors[i], alpha=0.3)
     
-    axs[0].set_xlabel('Concentration (cm$^-$$^3$)')
-    axs[0].set_ylabel('Altitude AGL (km)')
-    axs[0].set_ylim(0, 8)
-    axs[0].legend()
-    axs[0].set_xlim(0)
-    axs[1].set_xscale('log')
-    axs[1].set_xlabel('Concentration (cm$^-$$^3$)')
-    axs[1].set_ylabel('Altitude AGL (km)')
-    axs[1].set_ylim(0, 8)
-    #axs[2].set_xscale('log')
-    axs[2].set_xlabel('Concentration (L$^-$$^1$)')
-    axs[2].set_ylabel('Altitude AGL (km)')
-    axs[2].set_ylim(0, 8)
-    axs[2].set_xlim(0)
-    # axs[2].set_xlim(0,0.0025)
-    # axs[2].set_ylim(0,1.5)
-    #axs[2].set_xlim(1E-5, 1)
-    axs[2].legend()
-    axs[0].ticklabel_format(axis='x', style='sci', scilimits=(-1, 1))
-    axs[3].set_xscale('log')
-    axs[3].set_xlabel('Concentration (#/L)')
-    axs[3].set_ylabel('Altitude AGL (km)')
+    if axs[0]:
+        axs[0].set_xlabel('Concentration (cm$^-$$^3$)')
+        axs[0].set_ylabel('Altitude AGL (km)')
+        axs[0].set_ylim(0, 8)
+        axs[0].legend()
+        axs[0].set_xlim(0)
+        axs[0].ticklabel_format(axis='x', style='sci', scilimits=(-1, 1))
     
-    axs[3].set_ylim(0, 8)
-    #axs[1].ticklabel_format(axis='x', style='sci', scilimits=(-1, 1))
+    if axs[1]:
+        axs[1].set_xscale('log')
+        axs[1].set_xlabel('Concentration (cm$^-$$^3$)')
+        axs[1].set_ylabel('Altitude AGL (km)')
+        axs[1].set_ylim(0, 8)
+        #axs[1].ticklabel_format(axis='x', style='sci', scilimits=(-1, 1))
+    
+    
+    if axs[2]:
+        axs[2].set_xlabel('Concentration (L$^-$$^1$)')
+        axs[2].set_ylabel('Altitude AGL (km)')
+        axs[2].set_ylim(0, 8)
+        axs[2].set_xlim(0)
+        # axs[2].set_xlim(0,0.0025)
+        # axs[2].set_ylim(0,1.5)
+        # axs[2].set_xlim(1E-5, 1)
+        # axs[2].set_xscale('log')
+        axs[2].legend()
+    
+    if axs[3]:
+        axs[3].set_xscale('log')
+        axs[3].set_xlabel('Concentration (#/L)')
+        axs[3].set_ylabel('Altitude AGL (km)')
+        axs[3].set_ylim(0, 8)
+    
 
     if showplot:
         plt.show()
+    
+    if savefig:
+        if fig_name is None:
+            fig_name = f'{start_time}_{end_time}_avp.png'
+        fig.savefig(os.path.join(output_folder, fig_name), dpi=300)
+
 
     return aerosol_profile_mae, blind_aerosol_profile_mae, CCN_maes, blind_CCN_maes, INP_maes, blind_INP_maes
 
@@ -2109,7 +2130,9 @@ def output_data(start_time, end_time, station_name,
 
     dimension_range        = ds.createDimension('range', len(inv_range))
     dimension_aerosol_size = ds.createDimension('size',  len(merged_diameter))
-    dimension_ss           = ds.createDimension('ss',    len(ss_CCN))
+
+    if ss_CCN:
+        dimension_ss           = ds.createDimension('ss',    len(ss_CCN))
 
     dimension_blind_range  = ds.createDimension('blind_range', len(blind_inv_range))
 
@@ -2226,19 +2249,20 @@ def output_data(start_time, end_time, station_name,
     variable_aerosol_dndlogdp.longname \
                                      = "aerosol size distribution dNdlogDp"
 
-    variable_ccn_ss                  = ds.createVariable('ccn_ss', 'f8', ('ss',))
-    variable_ccn_ss.unit             = "%"
-    variable_ccn_ss.longname         = "supersaturations CCN concentration is evaluated at"
-    variable_ccn_conc                = ds.createVariable('ccn_conc', 'f8', ('ss',))
-    variable_ccn_conc.unit           = "#/cm\u00B3"
-    variable_ccn_conc.longname       = "average CCN concentration"
-    variable_ccn_conc_stdev          = ds.createVariable('ccn_conc_stdev', 'f8', ('ss',))
-    variable_ccn_conc_stdev.unit     = "#/cm\u00B3"
-    variable_ccn_conc_stdev.longname = "CCN concentration standard deviation"
-
-    variable_ccn_conc_ste          = ds.createVariable('ccn_conc_ste', 'f8', ('ss',))
-    variable_ccn_conc_ste.unit     = "#/cm\u00B3"
-    variable_ccn_conc_ste.longname = "CCN concentration standard error"
+    if ss_CCN:
+        variable_ccn_ss                  = ds.createVariable('ccn_ss', 'f8', ('ss',))
+        variable_ccn_ss.unit             = "%"
+        variable_ccn_ss.longname         = "supersaturations CCN concentration is evaluated at"
+    if conc_CCN:
+        variable_ccn_conc                = ds.createVariable('ccn_conc', 'f8', ('ss',))
+        variable_ccn_conc.unit           = "#/cm\u00B3"
+        variable_ccn_conc.longname       = "average CCN concentration"
+        variable_ccn_conc_stdev          = ds.createVariable('ccn_conc_stdev', 'f8', ('ss',))
+        variable_ccn_conc_stdev.unit     = "#/cm\u00B3"
+        variable_ccn_conc_stdev.longname = "CCN concentration standard deviation"
+        variable_ccn_conc_ste          = ds.createVariable('ccn_conc_ste', 'f8', ('ss',))
+        variable_ccn_conc_ste.unit     = "#/cm\u00B3"
+        variable_ccn_conc_ste.longname = "CCN concentration standard error"
 
     variable_aerosol_concentration   = ds.createVariable('aerosol_concentration', 'f8')
     variable_aerosol_concentration.unit \
@@ -2280,10 +2304,15 @@ def output_data(start_time, end_time, station_name,
     variable_rh_profile[:]                          = smotothed_rh_profile
     variable_aerosol_diameter[:]                    = merged_diameter
     variable_aerosol_dndlogdp[:]                    = mean_dndlogdp
-    variable_ccn_ss[:]                              = ss_CCN
-    variable_ccn_conc[:]                            = conc_CCN
-    variable_ccn_conc_stdev[:]                      = stdev_conc_CCN
-    variable_ccn_conc_ste[:]                        = ste_CCN
+    
+    if ss_CCN:
+        variable_ccn_ss[:]                              = ss_CCN
+    if conc_CCN:
+        variable_ccn_conc[:]                            = conc_CCN
+    if stdev_conc_CCN:
+        variable_ccn_conc_stdev[:]                      = stdev_conc_CCN
+    if ste_CCN:
+        variable_ccn_conc_ste[:]                        = ste_CCN
 
     variable_aerosol_concentration.assignValue(aerosol_concentration)
     variable_ste_aerosol_concentration.assignValue(ste_aerosol)
