@@ -31,9 +31,9 @@ This project uses portions of the [`mpl2nc`](https://github.com/peterkuma/mpl2nc
 - `dev/`
     - `pympl.py` – MPL data loading and preprocessing
     - `inversempl.py` – Fernald inversion implementation
-    - `find_layers.py` – Layer identification routines
+    - `find_layers.py` – Lidar Layer identification routines
     - `kappa_kohler_theory.py` – κ-Köhler theory utilities
     - `plotmpl.py` – Plotting functions
     - `retrieval_aux.py` – Auxiliary functions
-    - `tracer_avp_processing.py` – Main TRACER AVP pipeline
+    - `tracer_avp_processing.py` – Main Aerosol VerticaL Profile Retrieval pipeline
 
