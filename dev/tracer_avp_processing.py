@@ -1951,7 +1951,8 @@ def aerosol_profiles(start_time, end_time,
     CCN_maes = [] # store data for looping through supersaturation arrays
     blind_CCN_maes = []
 
-    if ss_array:
+
+    if list(ss_array):
         for i, an_ss in enumerate(ss_array):
             CCN_profiles = []
             blind_CCN_profiles = []
@@ -2128,7 +2129,7 @@ def output_data(start_time, end_time, station_name,
     dimension_range        = ds.createDimension('range', len(inv_range))
     dimension_aerosol_size = ds.createDimension('size',  len(merged_diameter))
 
-    if ss_CCN:
+    if list(ss_CCN):
         dimension_ss           = ds.createDimension('ss',    len(ss_CCN))
 
     dimension_blind_range  = ds.createDimension('blind_range', len(blind_inv_range))
@@ -2246,11 +2247,11 @@ def output_data(start_time, end_time, station_name,
     variable_aerosol_dndlogdp.longname \
                                      = "aerosol size distribution dNdlogDp"
 
-    if ss_CCN:
+    if list(ss_CCN):
         variable_ccn_ss                  = ds.createVariable('ccn_ss', 'f8', ('ss',))
         variable_ccn_ss.unit             = "%"
         variable_ccn_ss.longname         = "supersaturations CCN concentration is evaluated at"
-    if conc_CCN:
+    if list(conc_CCN):
         variable_ccn_conc                = ds.createVariable('ccn_conc', 'f8', ('ss',))
         variable_ccn_conc.unit           = "#/cm\u00B3"
         variable_ccn_conc.longname       = "average CCN concentration"
@@ -2302,13 +2303,13 @@ def output_data(start_time, end_time, station_name,
     variable_aerosol_diameter[:]                    = merged_diameter
     variable_aerosol_dndlogdp[:]                    = mean_dndlogdp
     
-    if ss_CCN:
+    if list(ss_CCN):
         variable_ccn_ss[:]                              = ss_CCN
-    if conc_CCN:
+    if list(conc_CCN):
         variable_ccn_conc[:]                            = conc_CCN
-    if stdev_conc_CCN:
+    if list(stdev_conc_CCN):
         variable_ccn_conc_stdev[:]                      = stdev_conc_CCN
-    if ste_CCN:
+    if list(ste_CCN):
         variable_ccn_conc_ste[:]                        = ste_CCN
 
     variable_aerosol_concentration.assignValue(aerosol_concentration)
