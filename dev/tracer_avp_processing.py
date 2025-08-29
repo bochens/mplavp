@@ -1105,12 +1105,9 @@ def calculate_kappa_value(start_time, end_time,
     #kappa             = kappa_kohler_theory.kappa_petter_and_Kreidenweis_2010_EQ10(critical_diameters*1E-9, ss_array[non_nan_indices]/100+1)
     kappa              = kappa_kohler_theory.calculate_kappa_fitting(critical_diameters*1E-9, ss_array[non_nan_indices]/100+1)
 
-    
-
     average_kappa = np.nanmean(kappa)
     gmean_kappa   = scipy.stats.gmean(kappa) 
     gstd_kappa    = scipy.stats.gstd(kappa) # Sample Geometric Standard Deviation
-
 
     # Plotting
     if fig is None or axs is None:

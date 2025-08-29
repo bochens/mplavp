@@ -48,8 +48,16 @@ def Fernald_inversion_inwards(nrb, mpl_range, beta2, S1, S2 = molecular_lidar_ra
         LAM: lidar wavelength in um. Default to 532 nm for micropulse lidar
 
     return:
-        beta1: retrieved backscatter coefficient (km-1 sr-1). dimension is [timestamp (optional), range]
-        inv_range: range used for the inversion
+        total_backscatter : ndarray
+            Total backscatter (beta1 + beta2), km^-1 sr^-1.
+            Shape [range] for a single profile, or [timestamp, range] for multiple timestamps.
+
+        beta2_output : ndarray
+            Molecular (Rayleigh) backscatter beta2, km^-1 sr^-1.
+            Shape [range] if beta2 input was 1-D, else [timestamp, range].
+
+        selected_range : ndarray
+            Range grid used for the inversion (km). 1-D array.
     '''
 
     nrb = np.transpose(np.array(nrb)) # transpose so the dimension is now [range, timestamp] since timestamp is optional
@@ -83,7 +91,7 @@ def Fernald_inversion_inwards(nrb, mpl_range, beta2, S1, S2 = molecular_lidar_ra
         else:
             pass
 
-    return np.transpose(np.array(total_backscatter)), beta2_output, selected_range
+    return np.transpose(np.array(total_backscatter)), np.transpose(np.array(beta2_output)), selected_range
 
 
 
